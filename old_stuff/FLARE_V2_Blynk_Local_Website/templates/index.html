@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLARE V2 | Flood & Landslide Risk Monitor</title>
+<style>
+:root{color-scheme:dark;--bg:#08111f;--panel:#111e30;--line:#263950;--muted:#9eb0c8;--text:#f3f7ff;--cyan:#4de3e8;--green:#55d6a3;--yellow:#ffd166;--red:#ff6b78}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at top right,#153450 0,transparent 42%),var(--bg);color:var(--text)}
+main{max-width:1100px;margin:auto;padding:28px 18px 42px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:13px;align-items:center}.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#4de3e8,#2687c7);display:grid;place-items:center;color:#07111d;font-weight:900;font-size:22px}
+h1{margin:0;font-size:clamp(24px,4vw,38px);letter-spacing:.04em} .sub{color:var(--muted);margin-top:6px;font-size:14px}
+.pill{border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--muted);font-size:12px}.dot{display:inline-block;width:8px;height:8px;background:var(--yellow);border-radius:50%;margin-right:7px}
+.hero{margin:26px 0 20px;padding:22px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(120deg,#12273a,#101a2b)}
+.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.riskrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:9px}
+.risk{font-size:clamp(24px,4vw,36px);font-weight:800}.riskdesc{color:var(--muted);font-size:14px;max-width:600px;line-height:1.5}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{background:rgba(17,30,48,.94);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0}
+.cardtop{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--muted);font-size:13px}
+.icon{font-size:22px}.value{font-size:clamp(30px,5vw,42px);font-weight:800;margin:20px 0 6px}.unit{font-size:16px;color:var(--muted);font-weight:500}
+.bar{height:7px;background:#26364b;border-radius:99px;overflow:hidden;margin-top:15px}.fill{height:100%;width:0;background:var(--cyan);border-radius:99px;transition:width .35s}
+.note{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.45}
+.lower{display:grid;grid-template-columns:1.1fr .9fr;gap:15px;margin-top:15px}
+h2{font-size:16px;margin:0 0 14px}.statusline{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:13px}.statusline:last-child{border:0}
+.tag{font-size:11px;font-weight:800;padding:5px 9px;border-radius:999px;background:#26364b;color:var(--muted);white-space:nowrap}.good{background:#123c34;color:var(--green)}.warn{background:#493a1c;color:var(--yellow)}.danger{background:#4b222c;color:var(--red)}
+#connection{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.5}.foot{margin-top:22px;color:#8fa1b8;font-size:11px;line-height:1.6}
+@media(max-width:760px){.cards{grid-template-columns:1fr}.lower{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="brand"><div class="logo">F</div><div><h1>FLARE <span style="color:var(--cyan)">V2</span></h1><div class="sub">Flood & Landslide Rescue Awareness · Live prototype dashboard</div></div></div>
+    <div class="pill"><span class="dot" id="dot"></span><span id="connectionState">Connecting to Blynk…</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Prototype risk assessment</div>
+    <div class="riskrow">
+      <div><div class="risk" id="riskTitle">Waiting for readings…</div><div class="riskdesc" id="riskText">FLARE is requesting the latest sensor values from your Blynk device.</div></div>
+      <div class="pill">Updated: <span id="updated">—</span></div>
+    </div>
+  </section>
+
+  <section class="cards">
+    <article class="card">
+      <div class="cardtop"><span>WATER LEVEL</span><span class="icon">〰️</span></div>
+      <div class="value"><span id="water">—</span><span class="unit"> %</span></div>
+      <div class="bar"><div class="fill" id="waterBar"></div></div>
+      <div class="note">Estimated from the ultrasonic sensor and the configured 20 cm reference height.</div>
+    </article>
+    <article class="card">
+      <div class="cardtop"><span>RAIN INTENSITY</span><span class="icon">🌧️</span></div>
+      <div class="value"><span id="rain">—</span><span class="unit"> %</span></div>
+      <div class="bar"><div class="fill" id="rainBar"></div></div>
+      <div class="note">Relative sensor reading. Calibrate using dry and wet conditions.</div>
+    </article>
+    <article class="card">
+      <div class="cardtop"><span>SOIL MOISTURE</span><span class="icon">🌱</span></div>
+      <div class="value"><span id="soil">—</span><span class="unit"> %</span></div>
+      <div class="bar"><div class="fill" id="soilBar"></div></div>
+      <div class="note">Relative moisture estimate. Soil moisture alone cannot predict a landslide.</div>
+    </article>
+  </section>
+
+  <section class="lower">
+    <article class="card">
+      <h2>Sensor status</h2>
+      <div class="statusline"><span>Water-level sensor</span><span class="tag" id="waterStatus">Waiting</span></div>
+      <div class="statusline"><span>Rain sensor</span><span class="tag" id="rainStatus">Waiting</span></div>
+      <div class="statusline"><span>Soil moisture sensor</span><span class="tag" id="soilStatus">Waiting</span></div>
+      <div id="connection">Checking readings…</div>
+    </article>
+    <article class="card">
+      <h2>Why this status?</h2>
+      <p id="explanation" style="color:var(--muted);font-size:14px;line-height:1.65;margin:0">The explanation will appear when readings arrive.</p>
+      <p class="note">Demo rule set: potential threat if water ≥ 70%, rain ≥ 70%, or soil moisture ≥ 80%; caution at water ≥ 50%, rain ≥ 50%, or soil moisture ≥ 65%. Adjust these thresholds after testing.</p>
+    </article>
+  </section>
+  <div class="foot">FLARE is an educational prototype, not an official warning system. Sensor percentages and thresholds require field calibration. Always follow official disaster-management alerts. This page refreshes from your local laptop server every 3 seconds.</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+function setTag(id, label, cls){ const e=$(id); e.textContent=label; e.className='tag '+(cls||''); }
+function sensorLabel(v, caution, danger){
+  if(v >= danger) return ['High','danger'];
+  if(v >= caution) return ['Elevated','warn'];
+  return ['Normal','good'];
+}
+function updateDashboard(d){
+  const w=Math.max(0,Math.min(100,d.water)), r=Math.max(0,Math.min(100,d.rain)), s=Math.max(0,Math.min(100,d.soil));
+  $('water').textContent=w.toFixed(0); $('rain').textContent=r.toFixed(0); $('soil').textContent=s.toFixed(0);
+  $('waterBar').style.width=w+'%'; $('rainBar').style.width=r+'%'; $('soilBar').style.width=s+'%';
+  const ws=sensorLabel(w,50,70), rs=sensorLabel(r,50,70), ss=sensorLabel(s,65,80);
+  setTag('waterStatus',ws[0],ws[1]); setTag('rainStatus',rs[0],rs[1]); setTag('soilStatus',ss[0],ss[1]);
+  const reasons=[];
+  if(w>=70) reasons.push('water level is high');
+  if(r>=70) reasons.push('rain sensor reading is high');
+  if(s>=80) reasons.push('soil moisture is high');
+  const caution=[];
+  if(w>=50 && w<70) caution.push('water level is elevated');
+  if(r>=50 && r<70) caution.push('rain reading is elevated');
+  if(s>=65 && s<80) caution.push('soil moisture is elevated');
+  const title=$('riskTitle'), text=$('riskText');
+  if(reasons.length){
+    title.textContent='POTENTIAL THREAT'; title.style.color='var(--red)';
+    text.textContent='One or more readings crossed the demo threshold. This is a prototype indication, not a confirmed disaster prediction.';
+    $('explanation').textContent='The warning was triggered because '+reasons.join(', ')+'. Check the physical sensors and compare with local conditions.';
+  } else if(caution.length){
+    title.textContent='CAUTION'; title.style.color='var(--yellow)';
+    text.textContent='At least one reading is elevated. Keep monitoring and verify the sensor values.';
+    $('explanation').textContent='The caution status is based on: '+caution.join(', ')+'. No reading has crossed the demo potential-threat threshold.';
+  } else {
+    title.textContent='NORMAL'; title.style.color='var(--green)';
+    text.textContent='All received readings are below the configured demo caution thresholds.';
+    $('explanation').textContent='None of the current readings crossed the configured caution thresholds. This does not guarantee that the area is safe.';
+  }
+  $('updated').textContent=new Date().toLocaleTimeString();
+  $('dot').style.background='var(--green)'; $('connectionState').textContent='Connected to Blynk';
+  $('connection').textContent='Latest values received successfully from Blynk Cloud.';
+}
+async function refresh(){
+  try{
+    const response=await fetch('/api/readings',{cache:'no-store'});
+    const data=await response.json();
+    if(!response.ok || !data.ok) throw new Error(data.error||'Unable to read sensor values.');
+    updateDashboard(data.readings);
+  }catch(err){
+    $('dot').style.background='var(--red)'; $('connectionState').textContent='Connection issue';
+    $('connection').textContent=err.message+' The dashboard will retry automatically.';
+  }
+}
+refresh(); setInterval(refresh,3000);
+</script>
+</body>
+</html>

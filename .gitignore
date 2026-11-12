@@ -1,0 +1,36 @@
+# Build & Local Environment Files
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+build_log.txt
+
+# Android / Gradle
+.gradle/
+build/
+**/build/
+local.properties
+*.iml
+.idea/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+ENV/
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*~

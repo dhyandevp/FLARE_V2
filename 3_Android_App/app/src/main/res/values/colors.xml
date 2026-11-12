@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="flare_background">#07111F</color>
+    <color name="flare_card">#101F31</color>
+    <color name="flare_card_border">#203B52</color>
+    <color name="flare_cyan">#21DDF3</color>
+    <color name="flare_white">#F3FAFF</color>
+    <color name="flare_muted">#91A8B9</color>
+    <color name="flare_warning">#FFC857</color>
+    <color name="flare_danger">#FF5364</color>
+    <color name="flare_button_text">#06121E</color>
+</resources>

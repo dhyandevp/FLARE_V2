@@ -1,0 +1,34 @@
+
+<resources>
+    <string name="app_name">FLARE V2</string>
+
+    <string name="connection_disconnected">ESP32: NOT CONNECTED</string>
+    <string name="connection_pending">Bluetooth setup pending</string>
+
+    <string name="threat_waiting">WAITING FOR DATA</string>
+    <string name="threat_normal">NORMAL</string>
+    <string name="threat_critical">CRITICAL: SOS</string>
+
+    <string name="water_reading">Water Level: %1$d%%</string>
+    <string name="rain_reading">Rainfall: %1$d%%</string>
+    <string name="soil_reading">Soil Moisture: %1$d%%</string>
+
+    <string name="risk_normal">All sensors below 70%%</string>
+    <string name="risk_threshold">THRESHOLD REACHED</string>
+
+    <string name="sos_active">SOS EMERGENCY: %1$s</string>
+    <string name="sos_water">Water Level</string>
+    <string name="sos_rain">Rainfall</string>
+    <string name="sos_soil">Soil Moisture</string>
+    <string name="sos_cutoff">70%% cutoff reached: %1$s</string>
+
+    <string name="sos_still_active">Emergency condition still active</string>
+    <string name="sos_none">No active SOS messages</string>
+
+    <string name="alarm_active">PHONE BUZZER: ACTIVE</string>
+    <string name="alarm_stopped">PHONE BUZZER: STOPPED</string>
+
+    <string name="notification_channel">FLARE Emergency Buzzer</string>
+    <string name="notification_description">Emergency buzzer notifications from FLARE</string>
+    <string name="notification_title">FLARE SOS EMERGENCY</string>
+</resources>
